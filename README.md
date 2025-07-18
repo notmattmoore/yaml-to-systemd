@@ -15,7 +15,7 @@ YAML file as well. The relevant keys are described below.
 | Key                | Description                                                                                                                                                                          |
 | ---                | ---                                                                                                                                                                                  |
 | `shortcuts`        | A dictionary. For each `(key, value)` pair, `key` will be replaced with `value` in unit file fields.                                                                                 |
-| `exec_pre`         | String to prepend to non-absolute Exec... lines. Can be used to support aliases, etc. See `user-exec` in `.config/systemd/` in (dotfiles)[https://github.com/notmattmoore/dotfiles]. |
+| `exec_pre`         | String to prepend to non-absolute Exec... lines. Can be used to support aliases, etc. See `user-exec` in `.config/systemd/` in [dotfiles](https://github.com/notmattmoore/dotfiles). |
 | `timer_defaults`   | A dictionary. Default field entries for `.timer` files.                                                                                                                              |
 | `service_defaults` | A dictionary. Default field entries for `.service` files.                                                                                                                            |
 | `unit_header`      | String to put at the top of unit files.                                                                                                                                              |
