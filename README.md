@@ -3,6 +3,8 @@
 Create and set up systemd timers and services as described in a (terse) YAML
 file.
 
+Usage: `yaml-to-systemd [-h] [--version] [--user] [--dry-run] FILE [FILE ...]`
+
 I find systemd services and timers to be quite cumbersome compared to a
 traditional cronfile. This script was written to enable a specification of
 timers and services in a single YAML file.
