@@ -1,7 +1,7 @@
 # `yaml-to-systemd`
 
 Create and set up systemd timers and services as described in a (terse) YAML
-file.
+file. Requires [python-mylibs](https://github.com/notmattmoore/python-mylibs).
 
 Usage: `yaml-to-systemd [-h] [--version] [--user] [--dry-run] FILE [FILE ...]`
 
@@ -16,8 +16,8 @@ YAML file as well. The relevant keys are described below.
 | ---                | ---                                                                                                                                                                                  |
 | `shortcuts`        | A dictionary. For each `(key, value)` pair, `key` will be replaced with `value` in unit file fields.                                                                                 |
 | `exec_pre`         | String to prepend to non-absolute Exec... lines. Can be used to support aliases, etc. See `user-exec` in `.config/systemd/` in [dotfiles](https://github.com/notmattmoore/dotfiles). |
-| `timer_defaults`   | A dictionary. Default field entries for `.timer` files.                                                                                                                              |
 | `service_defaults` | A dictionary. Default field entries for `.service` files.                                                                                                                            |
+| `timer_defaults`   | A dictionary. Default field entries for `.timer` files.                                                                                                                              |
 | `unit_header`      | String to put at the top of unit files.                                                                                                                                              |
 | `systemd_dir`      | `systemd` unit file directory. Typically `/etc/systemd/system` for systemd-mode and `~/.config/systemd/user` for user-mode.                                                          |
 | `systemctl_cmd`    | Command to use for `systemctl`.                                                                                                                                                      |
