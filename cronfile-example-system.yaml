@@ -1,0 +1,49 @@
+# Be sure to run yaml-to-systemd <file> when this file is modified.
+#
+# Defaults and shortcuts are defined in yaml-to-systemd and can be set in this
+# file as well. The relevant keys are
+#   "shortcuts", "exec_pre", "timer_defaults", "service_defaults",
+#   "unit_header", "systemd_dir", "systemctl_cmd", "dry_run"
+# Keys "shortcuts", "timer_defaults", "service_defaults" extend the defaults in
+# yaml-to-systemd while keys "exec_pre", "unit_header", "systemd_dir",
+# "systemctl_cmd", "dry_run" override them.
+#
+# Time specification is given in man systemd.time.
+#
+# All top-level keys support array assignment, in which case the block is
+# *-expanded. For example, {a: [b, c], d: e} yields {a:b, d:e} and {a:c, d:e}.
+#
+# YAML:
+# - key: value format, can be done inline like {key1: value1, key2: value2}
+# - indentation matters
+# - types are inferred, quoting strings is optional
+# - control sequences are ': ', '[',']','{','}','*','&'. Explicit quoting allows
+#   them to be used in strings.
+# - use --- to separate timer/service blocks
+# - extends JSON
+
+# every 10  minutes, check whether to suspend
+timer   : {OnActiveSec: 10min, OnUnitActiveSec: 10min}
+service : {ExecStart: auto-suspend}
+---  # hourly snapshots
+timer   : {OnCalendar: hourly, RandomizedDelaySec: 5min}
+service : {ExecStart: btrfs-snapshot / hourly 50}
+--- # daily snapshots
+timer   : {OnCalendar: daily, RandomizedDelaySec: 30min}
+service : {ExecStart: btrfs-snapshot / daily 10}
+--- # weekly snapshots
+timer   : {OnCalendar: weekly, RandomizedDelaySec: 1hr}
+service : {ExecStart: btrfs-snapshot / weekly 10}
+--- # monthly scrub BTRFS volumes
+timer   : {OnCalendar: monthly, RandomizedDelaySec: 12hr}
+service : {
+  # The scrub is long-running, so Type simple (the default) or oneshot is
+  # required. We use oneshot since it waits until ExecStart returns before
+  # executing ExecStartPost. The mail command in ExecStartPost will fork and
+  # systemd will kill it, so we hackishly sleep for a little while.
+  Type: simple,
+  ExecStart: btrfs scrub start -B /,
+  ExecStartPost: sh -c 'btrfs scrub status / | mail -s "BTRFS Scrub Status" mm@%H; sleep 5',
+  IOSchedulingClass: idle,
+  CPUSchedulingPolicy: idle,
+}
